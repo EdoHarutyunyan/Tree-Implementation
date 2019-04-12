@@ -9,6 +9,7 @@ struct TreeNode
 		, right{right}
 	{
 	}
+
 	T data;
 	TreeNode* left;
 	TreeNode* right;

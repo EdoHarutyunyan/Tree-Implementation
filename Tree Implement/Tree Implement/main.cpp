@@ -14,10 +14,11 @@ int main()
 	Tree<char> tree{ a };
 
 	tree.preOrder();
-	std::cout << "*****************" << std::endl;
 	tree.inOrder();
-	std::cout << "*****************" << std::endl;
 	tree.postOrder();
+	tree.levelOrder();
+
+	std::cout << "\nLeafs count: " << tree.leafCount();
 
 	system("pause");
 	return 0;
