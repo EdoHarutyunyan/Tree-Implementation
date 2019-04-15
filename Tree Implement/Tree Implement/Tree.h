@@ -3,6 +3,7 @@
 #include "TreeNode.h"
 
 #include <queue>
+#include <stack>
 
 template<typename T>
 class Tree
@@ -13,25 +14,42 @@ public:
 
 	void preOrder() const;
 
+	void preOrder_iter() const;
+
 	void inOrder() const;
 
+	void inOrder_iter() const;
+
 	void postOrder() const;
+
+	void postOrder_iter() const;
 
 	void levelOrder() const;
 
 	size_t leafCount() const;
 
+	size_t getWidth() const;
+
 private:
 
 	static void preOrder(TreeNode<T>* node);
 
+	static void preOrder_iter(TreeNode<T>* node);
+
 	static void inOrder(TreeNode<T>* node);
 
+	static void inOrder_iter(TreeNode<T>* node);
+
 	static void postOrder(TreeNode<T>* node);
+
+	static void postOrder_iter(TreeNode<T>* node);
 
 	static void levelOrder(TreeNode<T>* node);
 
 	static size_t leafCount(TreeNode<T>* node);
+	
+	static size_t getWidth(TreeNode<T>* node);
+
 
 	TreeNode<T>* m_root;
 };
@@ -55,6 +73,17 @@ inline void Tree<T>::preOrder() const
 }
 
 template<typename T>
+inline void Tree<T>::preOrder_iter() const
+{
+	if (nullptr == m_root)
+	{
+		return;
+	}
+
+	return preOrder_iter(m_root);
+}
+
+template<typename T>
 inline void Tree<T>::inOrder() const
 {
 	std::cout << "\nInorder" << std::endl;
@@ -65,6 +94,17 @@ inline void Tree<T>::inOrder() const
 	}
 
 	inOrder(m_root);
+}
+
+template<typename T>
+inline void Tree<T>::inOrder_iter() const
+{
+	if (nullptr == m_root)
+	{
+		return;
+	}
+
+	return inOrder_iter(m_root);
 }
 
 template<typename T>
@@ -111,6 +151,34 @@ inline void Tree<T>::preOrder(TreeNode<T>* node)
 }
 
 template<typename T>
+inline void Tree<T>::preOrder_iter(TreeNode<T>* node)
+{
+	std::stack<TreeNode<T>*> s;
+
+	auto tmp = node;
+
+	while (true)
+	{
+		while (nullptr != tmp)
+		{
+			std::cout << tmp->data << " ";
+			s.push(tmp);
+
+			tmp = tmp->left;
+		}
+
+		if (s.empty())
+		{
+			break;
+		}
+
+		tmp = s.top()->right;
+		s.pop();
+	}
+
+}
+
+template<typename T>
 inline void Tree<T>::inOrder(TreeNode<T>* node)
 {
 
@@ -124,6 +192,34 @@ inline void Tree<T>::inOrder(TreeNode<T>* node)
 	if (node->right != nullptr)
 	{
 		inOrder(node->right);
+	}
+}
+
+template<typename T>
+inline void Tree<T>::inOrder_iter(TreeNode<T>* node)
+{
+	std::stack<TreeNode<T>*> s;
+
+	auto tmp = node;
+
+	while (true)
+	{
+		while (nullptr != tmp)
+		{
+			s.push(tmp);
+
+			tmp = tmp->left;
+		}
+
+		if (s.empty())
+		{
+			break;
+		}
+
+		tmp = s.top();
+		std::cout << tmp->data << " ";
+		tmp = tmp->right;
+		s.pop();
 	}
 }
 
@@ -189,6 +285,38 @@ inline size_t Tree<T>::leafCount(TreeNode<T>* node)
 }
 
 template<typename T>
+inline size_t Tree<T>::getWidth(TreeNode<T>* node)
+{
+	std::queue<TreeNode<T>*> q;
+	q.push(node);
+	
+	auto max{ q.size() };
+
+	while (!q.empty())
+	{
+		const auto q_size = q.size();
+
+		max = std::max(max, q_size);
+		for (auto i = 0u; i < q_size; ++i)
+		{
+			auto tmp = q.front();
+			q.pop();
+
+			if (nullptr != tmp->left)
+			{
+				q.push(tmp->left);
+			}
+			if (nullptr != tmp->right)
+			{
+				q.push(tmp->right);
+			}
+		}
+	}
+
+	return max;
+}
+
+template<typename T>
 inline size_t Tree<T>::leafCount() const
 {
 	if (nullptr == m_root)
@@ -197,4 +325,15 @@ inline size_t Tree<T>::leafCount() const
 	}
 
 	return leafCount(m_root);
+}
+
+template<typename T>
+inline size_t Tree<T>::getWidth() const
+{
+	if (m_root == nullptr)
+	{
+		return 0u;
+	}
+
+	return getWidth(m_root);
 }

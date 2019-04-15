@@ -4,7 +4,9 @@
 
 int main()
 {
-	TreeNode<char>* f = new TreeNode<char>('F');
+	TreeNode<char>* g = new TreeNode<char>('G');
+	TreeNode<char>* h = new TreeNode<char>('H');
+	TreeNode<char>* f = new TreeNode<char>('F', g, h);
 	TreeNode<char>* e = new TreeNode<char>('E');
 	TreeNode<char>* c = new TreeNode<char>('C', e, f);
 	TreeNode<char>* d = new TreeNode<char>('D');
@@ -14,11 +16,14 @@ int main()
 	Tree<char> tree{ a };
 
 	tree.preOrder();
+	tree.preOrder_iter();
 	tree.inOrder();
 	tree.postOrder();
 	tree.levelOrder();
 
 	std::cout << "\nLeafs count: " << tree.leafCount();
+
+	std::cout << "\nWidth: " << tree.getWidth() << std::endl;
 
 	system("pause");
 	return 0;
