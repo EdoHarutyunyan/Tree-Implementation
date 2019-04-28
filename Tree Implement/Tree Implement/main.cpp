@@ -23,8 +23,13 @@ int main()
 
 	std::cout << "\nLeafs count: " << tree.leafCount();
 
-	std::cout << "\nWidth: " << tree.getWidth() << std::endl;
+	std::cout << "\nWidth: " << tree.width() << std::endl;
+	std::cout << "\Height: " << tree.height() << std::endl;
 
+	std::cout << std::boolalpha << tree.find('A') << std::endl;
+	std::cout << std::boolalpha << tree.find('Q') << std::endl;
+
+	std::cout << std::boolalpha << tree.strongBT() << std::endl;
 	system("pause");
 	return 0;
 }

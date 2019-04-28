@@ -24,11 +24,19 @@ public:
 
 	void postOrder_iter() const;
 
+	void zigzagOrder() const;
+
 	void levelOrder() const;
 
 	size_t leafCount() const;
 
-	size_t getWidth() const;
+	size_t width() const;
+
+	size_t height() const;
+
+	bool find(const T& value) const;
+
+	bool strongBT() const;
 
 private:
 
@@ -46,10 +54,17 @@ private:
 
 	static void levelOrder(TreeNode<T>* node);
 
+	static void zigzagOrder(TreeNode<T>* node);
+
 	static size_t leafCount(TreeNode<T>* node);
 	
-	static size_t getWidth(TreeNode<T>* node);
+	static size_t width(TreeNode<T>* node);
 
+	static size_t height(TreeNode<T>* node);
+
+	static bool find(TreeNode<T>* node, const T& value);
+
+	static bool strongBT(TreeNode<T>* node);
 
 	TreeNode<T>* m_root;
 };
@@ -75,12 +90,20 @@ inline void Tree<T>::preOrder() const
 template<typename T>
 inline void Tree<T>::preOrder_iter() const
 {
+
+}
+
+template<typename T>
+inline void Tree<T>::postOrder_iter() const
+{
+	std::cout << "\nPostorder_Iter" << std::endl;
+
 	if (nullptr == m_root)
 	{
 		return;
 	}
 
-	return preOrder_iter(m_root);
+	return postOrder_iter(m_root);
 }
 
 template<typename T>
@@ -118,6 +141,17 @@ inline void Tree<T>::postOrder() const
 	}
 
 	postOrder(m_root);
+}
+
+template<typename T>
+inline void Tree<T>::zigzagOrder() const
+{
+	if (nullptr == m_root)
+	{
+		return;
+	}
+
+	zigzagOrder(m_root);
 }
 
 template<typename T>
@@ -240,6 +274,11 @@ inline void Tree<T>::postOrder(TreeNode<T>* node)
 }
 
 template<typename T>
+inline void Tree<T>::postOrder_iter(TreeNode<T>* node)
+{
+}
+
+template<typename T>
 inline void Tree<T>::levelOrder(TreeNode<T>* node)
 {
 	std::queue<TreeNode<T>*> q;
@@ -285,7 +324,7 @@ inline size_t Tree<T>::leafCount(TreeNode<T>* node)
 }
 
 template<typename T>
-inline size_t Tree<T>::getWidth(TreeNode<T>* node)
+inline size_t Tree<T>::width(TreeNode<T>* node)
 {
 	std::queue<TreeNode<T>*> q;
 	q.push(node);
@@ -317,6 +356,98 @@ inline size_t Tree<T>::getWidth(TreeNode<T>* node)
 }
 
 template<typename T>
+inline size_t Tree<T>::height(TreeNode<T>* node)
+{
+	if (nullptr == node)
+	{
+		return 0u;
+	}
+
+	return std::max(height(node->left), height(node->right)) + 1;
+}
+
+template<typename T>
+inline bool Tree<T>::find(TreeNode<T>* node, const T & value)
+{
+	if (nullptr == node)
+	{
+		return false;
+	}
+	if (value == node->data)
+	{
+		return true;
+	}
+
+	return (find(node->left, value) || find(node->right, value));
+}
+
+template<typename T>
+inline bool Tree<T>::strongBT(TreeNode<T>* node)
+{
+	if (nullptr == node->left && nullptr == node->right)
+	{
+		return true;
+	}
+	if ((nullptr == node->left && nullptr != node->right) && (nullptr != node->left && nullptr == node->right))
+	{
+		return false;
+	}
+
+	return strongBT(node->left) && strongBT(node->right);
+}
+
+template<typename T>
+inline void Tree<T>::zigzagOrder(TreeNode<T>* node)
+{
+	/*auto push_left = [&q](auto node)
+	{
+		if (nullptr != node->left)
+		{
+			q.push(node->left);
+		}
+	};
+
+	auto push_right = [&q](auto node)
+	{
+		if (nullptr != node->left)
+		{
+			q.push(node->left);
+		}
+	};
+
+	std::queue<TreeNode<T>*> q;
+	q.push(node);
+
+	bool to_left = false;
+
+	while (!q.empty())
+	{
+
+		to_left = !to_left;
+
+		for (auto i = 0u; i < q_size; ++i)
+		{
+			auto tmp = q.front();
+			q.pop();
+
+			std::cout << node->data << " ";
+
+			if (to_left)
+			{
+				q.push(tmp->left);
+				q.push(tmp->right);
+			}
+			if (!to_left)
+			{
+				q.push(tmp->right);
+				q.push(tmp->left);
+			}
+		}
+
+	}	*/
+}
+
+template<typename T>
 inline size_t Tree<T>::leafCount() const
 {
 	if (nullptr == m_root)
@@ -328,12 +459,45 @@ inline size_t Tree<T>::leafCount() const
 }
 
 template<typename T>
-inline size_t Tree<T>::getWidth() const
+inline size_t Tree<T>::width() const
 {
 	if (m_root == nullptr)
 	{
 		return 0u;
 	}
 
-	return getWidth(m_root);
+	return width(m_root);
+}
+
+template<typename T>
+inline size_t Tree<T>::height() const
+{
+	if (nullptr == m_root)
+	{
+		return 0u;
+	}
+
+	return height(m_root);
+}
+
+template<typename T>
+inline bool Tree<T>::find(const T& value) const
+{
+	if (nullptr == m_root)
+	{
+		return false;
+	}
+
+	return find(m_root, value);
+}
+
+template<typename T>
+inline bool Tree<T>::strongBT() const
+{
+	if (nullptr == m_root)
+	{
+		return false;
+	}
+
+	return strongBT(m_root);
 }
